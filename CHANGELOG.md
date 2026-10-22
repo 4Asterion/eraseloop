@@ -7,7 +7,7 @@
 - **New:** `observation.graceMs` for asynchronous deletion pipelines: data may linger during the grace period but must be gone afterwards; reappearance after an absent sample always fails.
 - **New:** per-probe verdicts (`probes[].result` / `reason`), so a report names the store that kept or resurrected the data. Reappearance is now detected per probe, not only when all probes were absent at once.
 - **New:** `--format markdown` (job summaries, PR comments) and `--format junit` (CI test reports, one test case per probe); `-h` and `--version` aliases.
-- **CI:** a new job runs the CLI against real PostgreSQL, Redis and MinIO containers for both clean deletion and delayed resurrection.
+- **CI:** a new job runs the CLI against real PostgreSQL, Redis and S3-compatible (S3Mock) containers for both clean deletion and delayed resurrection. The integration stack no longer uses MinIO, whose images are no longer freely pullable.
 
 ## 0.1.0 - 2026-10-22
 

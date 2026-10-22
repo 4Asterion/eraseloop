@@ -1,6 +1,6 @@
 # Opt-in real-store integration fixture
 
-This stack provides a disposable PostgreSQL database, Redis cache and MinIO object store on **localhost-only ports**. It has intentionally trivial development-only credentials. **Never expose these ports or reuse these credentials.**
+This stack provides a disposable PostgreSQL database, Redis cache and S3-compatible object store ([S3Mock](https://github.com/adobe/S3Mock)) on **localhost-only ports**. It has intentionally trivial development-only credentials (S3Mock accepts any). **Never expose these ports or reuse these credentials.**
 
 Requirements: Docker Compose, Node 22+, `psql`, `redis-cli`, `aws` CLI, and localhost ports 55432, 56379, 59000 and 8792 free.
 
@@ -32,4 +32,4 @@ After testing:
 docker compose -f integration/docker-compose.yml down -v
 ```
 
-**Verification scope:** This stack is supplied for local/manual and future CI testing; it is not executed by the default unit-test job, and it has not been exercised in the build environment without Docker. Use it to validate the actual client tools and service compatibility before shipping a release claiming multi-store integration support.
+**Verification scope:** the `integration` job in [CI](../.github/workflows/ci.yml) runs exactly these steps on every push, for both a clean deletion and a delayed resurrection. It covers the real `psql`, `redis-cli` and AWS CLI clients against these containers; S3Mock stands in for AWS S3, so provider-specific behaviour (IAM errors, replication lag) is not exercised.

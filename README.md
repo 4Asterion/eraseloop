@@ -69,7 +69,7 @@ Formats: `text`, `json` (schema v1), `html`, `markdown`, `junit` (one test case 
 | `2` | Invalid configuration, arguments or report destination (checked **before** any API call) |
 | `3` | Inconclusive: missing baseline, failed lifecycle call, or a probe that could not prove absence |
 
-This repository's own CI runs EraseLoop against real PostgreSQL, Redis and MinIO containers, for both a clean deletion and a delayed resurrection ([integration/](integration/README.md)).
+This repository's own CI runs EraseLoop against real PostgreSQL, Redis and S3-compatible (S3Mock) containers, for both a clean deletion and a delayed resurrection ([integration/](integration/README.md)).
 
 ## Safety first
 

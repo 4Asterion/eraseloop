@@ -15,8 +15,8 @@ jobs:
         node: ['22', '24']
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
       - run: npm run check
@@ -25,13 +25,13 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
       - run: node --experimental-test-coverage --test tests/*.test.js
   integration:
-    name: Real PostgreSQL + Redis + MinIO
+    name: Real PostgreSQL + Redis + S3
     runs-on: ubuntu-latest
     env:
       ERASELOOP_PG_URL: postgresql://eraseloop:eraseloop_dev_only@127.0.0.1:55432/eraseloop
@@ -43,8 +43,8 @@ jobs:
       AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
       ERASELOOP_EMPTY_FIXTURE_FILE: /tmp/eraseloop-test-blob.json
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
       - name: Install client tools
