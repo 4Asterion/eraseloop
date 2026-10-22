@@ -1,0 +1,97 @@
+{
+  "schema_version": "1",
+  "tool": "EraseLoop",
+  "subject_fingerprint": "el_…154085",
+  "result": "failed",
+  "observation": {
+    "interval_ms": 200,
+    "duration_ms": 1000,
+    "grace_ms": 0
+  },
+  "observations": [
+    {
+      "phase": "baseline",
+      "t_ms": 42,
+      "checks": [
+        {
+          "name": "app-storage",
+          "state": "present"
+        }
+      ]
+    },
+    {
+      "phase": "post_delete",
+      "t_ms": 46,
+      "checks": [
+        {
+          "name": "app-storage",
+          "state": "absent"
+        }
+      ]
+    },
+    {
+      "phase": "post_delete",
+      "t_ms": 248,
+      "checks": [
+        {
+          "name": "app-storage",
+          "state": "absent"
+        }
+      ]
+    },
+    {
+      "phase": "post_delete",
+      "t_ms": 450,
+      "checks": [
+        {
+          "name": "app-storage",
+          "state": "present"
+        }
+      ]
+    },
+    {
+      "phase": "post_delete",
+      "t_ms": 653,
+      "checks": [
+        {
+          "name": "app-storage",
+          "state": "present"
+        }
+      ]
+    },
+    {
+      "phase": "post_delete",
+      "t_ms": 855,
+      "checks": [
+        {
+          "name": "app-storage",
+          "state": "present"
+        }
+      ]
+    },
+    {
+      "phase": "post_delete",
+      "t_ms": 1057,
+      "checks": [
+        {
+          "name": "app-storage",
+          "state": "present"
+        }
+      ]
+    }
+  ],
+  "probes": [
+    {
+      "name": "app-storage",
+      "type": "http",
+      "result": "failed",
+      "reason": "data_reappeared"
+    }
+  ],
+  "limitations": [
+    "Only explicitly configured stores and the configured observation window are verified.",
+    "Backups, third-party processors, logs, replicas and unconfigured stores are not covered.",
+    "Never interpret this report as legal proof of erasure or complete system-wide deletion."
+  ],
+  "reason": "data_reappeared"
+}

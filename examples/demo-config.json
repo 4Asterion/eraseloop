@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "baseUrl": "http://127.0.0.1:8791",
+  "create": {
+    "method": "POST",
+    "path": "/test-users",
+    "body": {
+      "subject": "{{subject}}"
+    }
+  },
+  "delete": {
+    "method": "DELETE",
+    "path": "/test-users/{{subject}}"
+  },
+  "probes": [
+    {
+      "name": "app-storage",
+      "type": "http",
+      "path": "/test-users/{{subject}}",
+      "expect": "jsonZero",
+      "jsonPath": [
+        "count"
+      ]
+    }
+  ],
+  "observation": {
+    "intervalMs": 200,
+    "durationMs": 1000
+  }
+}

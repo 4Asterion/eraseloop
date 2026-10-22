@@ -1,0 +1,22 @@
+{
+  "name": "eraseloop",
+  "version": "0.2.0",
+  "description": "Prove that deleted user data stays deleted: synthetic deletion regression tests across HTTP APIs, PostgreSQL, Redis and S3.",
+  "type": "module",
+  "private": false,
+  "license": "MIT",
+  "author": "brkcn369-debug",
+  "repository": {"type": "git", "url": "git+https://github.com/brkcn369-debug/eraseloop.git"},
+  "homepage": "https://github.com/brkcn369-debug/eraseloop#readme",
+  "bugs": {"url": "https://github.com/brkcn369-debug/eraseloop/issues"},
+  "engines": {"node": ">=22.0.0"},
+  "bin": {"eraseloop": "./src/cli.js"},
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "check": "node --check src/cli.js && node --check src/engine.js && node --check src/probes.js && node --check src/report.js && node --check src/config.js && node --check src/request.js && node --check integration/fixture-server.js",
+    "demo": "node examples/demo-server/server.js",
+    "run:demo": "node src/cli.js run --config examples/demo-config.json --format html --output demo-report.html"
+  },
+  "files": ["src", "README.md", "LICENSE", "docs"],
+  "keywords": ["privacy", "gdpr", "right-to-be-forgotten", "data-deletion", "testing", "regression", "postgresql", "redis", "s3"]
+}

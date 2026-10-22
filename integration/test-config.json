@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "baseUrl": "http://127.0.0.1:8792",
+  "create": {"method": "POST", "path": "/test-users", "body": {"subject": "{{subject}}"}},
+  "delete": {"method": "DELETE", "path": "/test-users/{{subject}}"},
+  "probes": [
+    {"name": "postgres", "type": "postgres", "schema": "public", "table": "synthetic_users", "column": "subject", "connectionEnv": "ERASELOOP_PG_URL"},
+    {"name": "redis", "type": "redis", "host": "127.0.0.1", "port": 56379, "key": "eraseloop:{{subject}}"},
+    {"name": "minio", "type": "s3", "bucket": "eraseloop-fixtures", "key": "users/{{subject}}/profile.json", "endpointUrl": "http://127.0.0.1:59000"}
+  ],
+  "observation": {"intervalMs": 300, "durationMs": 1500}
+}

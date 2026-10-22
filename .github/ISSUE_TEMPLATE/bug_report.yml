@@ -1,0 +1,18 @@
+name: Bug report
+description: Report a false positive, missing detection, or runtime problem
+title: "bug: "
+labels: [bug]
+body:
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal synthetic reproduction
+      description: Include sanitized config and expected observations. Do not include real user identities or tokens.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true

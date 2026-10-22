@@ -1,0 +1,89 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  node:
+    name: Node ${{ matrix.node }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22', '24']
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm run check
+      - run: npm test
+      - run: npm pack --dry-run
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --experimental-test-coverage --test tests/*.test.js
+  integration:
+    name: Real PostgreSQL + Redis + MinIO
+    runs-on: ubuntu-latest
+    env:
+      ERASELOOP_PG_URL: postgresql://eraseloop:eraseloop_dev_only@127.0.0.1:55432/eraseloop
+      AWS_ACCESS_KEY_ID: eraseloop_dev
+      AWS_SECRET_ACCESS_KEY: eraseloop_dev_password
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_EC2_METADATA_DISABLED: 'true'
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+      ERASELOOP_EMPTY_FIXTURE_FILE: /tmp/eraseloop-test-blob.json
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install client tools
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client redis-tools
+      - name: Start disposable stores
+        run: docker compose -f integration/docker-compose.yml up -d --wait
+      - name: Create bucket and fixture blob
+        run: |
+          printf '{}' > "$ERASELOOP_EMPTY_FIXTURE_FILE"
+          for i in $(seq 1 30); do
+            aws --endpoint-url http://127.0.0.1:59000 s3api create-bucket --bucket eraseloop-fixtures && exit 0
+            sleep 2
+          done
+          exit 1
+      - name: Clean deletion passes across all three stores
+        run: |
+          node integration/fixture-server.js &
+          fixture=$!
+          for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8792/ && break; sleep 1; done
+          set +e
+          node src/cli.js run --config integration/test-config.json --format markdown --output clean.md
+          code=$?
+          set -e
+          kill "$fixture"
+          cat clean.md >> "$GITHUB_STEP_SUMMARY"
+          test "$code" -eq 0
+      - name: Delayed PostgreSQL resurrection is caught
+        run: |
+          REAPPEAR=1 node integration/fixture-server.js &
+          fixture=$!
+          for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8792/ && break; sleep 1; done
+          set +e
+          node src/cli.js run --config integration/test-config.json --format json --output reappear.json
+          code=$?
+          set -e
+          kill "$fixture"
+          cat reappear.json
+          test "$code" -eq 1
+          node -e "const r=require('./reappear.json');if(r.reason!=='data_reappeared'||r.probes.find(p=>p.name==='postgres').result!=='failed')process.exit(1)"
+      - name: Stop stores
+        if: always()
+        run: docker compose -f integration/docker-compose.yml down -v

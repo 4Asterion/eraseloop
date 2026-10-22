@@ -1,0 +1,29 @@
+# Opt-in local integration stack; never connect this fixture to real users.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: eraseloop
+      POSTGRES_PASSWORD: eraseloop_dev_only
+      POSTGRES_DB: eraseloop
+    ports:
+      - '127.0.0.1:55432:5432'
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U eraseloop -d eraseloop']
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '127.0.0.1:56379:6379'
+  minio:
+    image: quay.io/minio/minio:latest
+    command: ['server', '/data']
+    environment:
+      MINIO_ROOT_USER: eraseloop_dev
+      MINIO_ROOT_PASSWORD: eraseloop_dev_password
+    ports:
+      - '127.0.0.1:59000:9000'
