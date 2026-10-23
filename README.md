@@ -1,6 +1,6 @@
 # EraseLoop
 
-[![CI](https://github.com/brkcn369-debug/eraseloop/actions/workflows/ci.yml/badge.svg)](https://github.com/brkcn369-debug/eraseloop/actions/workflows/ci.yml)
+[![CI](https://github.com/4Asterion/eraseloop/actions/workflows/ci.yml/badge.svg)](https://github.com/4Asterion/eraseloop/actions/workflows/ci.yml)
 ![Node 22+](https://img.shields.io/badge/node-22%2B-339933)
 ![Dependencies: none](https://img.shields.io/badge/dependencies-none-brightgreen)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -16,7 +16,7 @@ Zero dependencies (Node 22+). Safe defaults: localhost targets only, synthetic i
 ## Quick start
 
 ```sh
-git clone https://github.com/brkcn369-debug/eraseloop
+git clone https://github.com/4Asterion/eraseloop
 cd eraseloop
 npm test
 REAPPEAR=1 npm run demo        # a demo API that "forgets" to delete properly
